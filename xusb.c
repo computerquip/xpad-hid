@@ -274,9 +274,8 @@ int xusb_hid_open(struct hid_device *hdev)
 		++hdev->open;
 		return usb_submit_urb(controller->in.urb, GFP_KERNEL);
 	}
-	
-	return 0;
 #endif
+	return 0;
 }
 
 void xusb_hid_close(struct hid_device *hdev)
