@@ -1,6 +1,6 @@
-obj-m := x360.o
+obj-m := xxusb.o
 
-x360-y  := hid-x360.o
+xxusb-y  := xusb.o
 
 ccflags-y   := -DDEBUG -std=gnu99
 
