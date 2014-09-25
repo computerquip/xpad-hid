@@ -45,7 +45,7 @@ struct xusb_device {
 };
 
 /* The following descriptor is from Xfree360. Shoutout to Tatoobogle as well.  */
-char x360_report_descriptor[196] = {
+char x360_report_descriptor[] = {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
     0x09, 0x05,                    // USAGE (Game Pad)
     0xa1, 0x01,                    // COLLECTION (Application)
