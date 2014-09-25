@@ -45,7 +45,7 @@ struct xusb_device {
 };
 
 /* The following descriptor is from Xfree360. Shoutout to Tatoobogle as well.  */
-char x360_report_descriptor[] = {
+char x360_report_descriptor[196] = {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
     0x09, 0x05,                    // USAGE (Game Pad)
     0xa1, 0x01,                    // COLLECTION (Application)
@@ -200,6 +200,7 @@ void xusb_irq_in(struct urb *urb)
 		hid_input_report(controller->hid, HID_INPUT_REPORT,
 			         urb->transfer_buffer,
 			         urb->actual_length, 1);
+		break;
 	case -ECONNRESET:
 	case -ENOENT:
 	case -ESHUTDOWN:
@@ -209,7 +210,6 @@ void xusb_irq_in(struct urb *urb)
 	}
 	
 	usb_submit_urb(urb, GFP_ATOMIC);
-	return;
 }
 
 void xusb_irq_out(struct urb *urb)
@@ -267,12 +267,12 @@ void xusb_hid_stop(struct hid_device *hdev)
 
 int xusb_hid_open(struct hid_device *hdev)
 {
-#if 0
+#if 1
 	struct xusb_device *controller = hdev->driver_data;
 	
 	if (!hdev->open) {
 		++hdev->open;
-		return usb_submit_urb(controller->in.urb, GFP_KERNEL);
+		return usb_submit_urb(controller->in.urb, GFP_ATOMIC);
 	}
 #endif
 	return 0;
@@ -280,7 +280,7 @@ int xusb_hid_open(struct hid_device *hdev)
 
 void xusb_hid_close(struct hid_device *hdev)
 {
-#if 0
+#if 1
 	struct xusb_device *controller = hdev->driver_data;
 	--hdev->open;
 	
@@ -335,11 +335,10 @@ static int xusb_probe(struct usb_interface *intf, const struct usb_device_id *id
 	
 	controller->hid = hid;
 	controller->intf = intf;
+	usb_set_intfdata(intf, controller);
 	
 	error = hid_add_device(hid);
 	if (error) goto fail_hid_add_device;
-	
-	usb_set_intfdata(intf, controller);
 	
 	return 0;
 	
