@@ -258,6 +258,7 @@ fail_alloc_out:
 
 void xusb_hid_stop(struct hid_device *hdev)
 {
+
 	struct xusb_device *controller = hdev->driver_data;
 	
 	xusb_free_urb(&controller->in, controller->intf);
@@ -266,6 +267,7 @@ void xusb_hid_stop(struct hid_device *hdev)
 
 int xusb_hid_open(struct hid_device *hdev)
 {
+#if 0
 	struct xusb_device *controller = hdev->driver_data;
 	
 	if (!hdev->open) {
@@ -274,16 +276,19 @@ int xusb_hid_open(struct hid_device *hdev)
 	}
 	
 	return 0;
+#endif
 }
 
 void xusb_hid_close(struct hid_device *hdev)
 {
+#if 0
 	struct xusb_device *controller = hdev->driver_data;
 	--hdev->open;
 	
 	if (!hdev->open) {
 		usb_kill_urb(controller->in.urb);
 	}
+#endif
 }
 
 int xusb_hid_raw_request(
